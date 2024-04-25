@@ -37,19 +37,19 @@ public class Concert {
 
     @NotNull(message = "Concert date cannot be null")
     @Column(name = "concert_date")
-    private LocalDateTime concertDate;
+    private Date concertDate;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Date createdAt;
 
     @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
+    private Date updatedAt;
 
     public Concert() {
 
     }
 
-    public Concert(String venue, String venueLink, String city, String country, String ticketsLink, LocalDateTime concertDate, LocalDateTime createdAt, LocalDateTime updatedAt ) {
+    public Concert(String venue, String venueLink, String city, String country, String ticketsLink, Date concertDate, Date createdAt, Date updatedAt ) {
         this.venue = venue;
         this.venueLink = venueLink;
         this.city = city;
@@ -60,11 +60,11 @@ public class Concert {
         this.updatedAt = updatedAt;
     }
 
-    public LocalDateTime getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(LocalDateTime updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -108,11 +108,11 @@ public class Concert {
         this.country = country;
     }
 
-    public LocalDateTime getConcertDate() {
+    public Date getConcertDate() {
         return concertDate;
     }
 
-    public void setConcertDate(LocalDateTime concertDate) {
+    public void setConcertDate(Date concertDate) {
         this.concertDate = concertDate;
     }
 
@@ -124,11 +124,11 @@ public class Concert {
         this.ticketsLink = ticketsLink;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 }
