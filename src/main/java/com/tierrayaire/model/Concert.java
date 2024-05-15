@@ -3,8 +3,6 @@ package com.tierrayaire.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -12,7 +10,7 @@ import java.util.Date;
 public class Concert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull(message = "Venue cannot be null")
     @Size(min = 1, max = 255, message = "Venue must be between 1 and 255 characters")
@@ -68,11 +66,11 @@ public class Concert {
         this.updatedAt = updatedAt;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
