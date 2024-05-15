@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-@RequestMapping("/api/v1/")
+@RequestMapping("/api/v1/concerts")
 
 public class ConcertController {
 
@@ -28,30 +28,30 @@ public class ConcertController {
         this.concertService = concertService;
     }
 
-    @GetMapping("/concerts")
+    @GetMapping("/")
     public List<Concert> getAllConcerts() {
         return concertService.findAll();
     }
 
-    @GetMapping("/concerts/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Concert> getConcertById(@PathVariable Long id) {
         Concert concert = concertService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Concert not found with id: " + id));
         return ResponseEntity.ok(concert);
     }
 
-    @PostMapping("/concerts")
+    @PostMapping("/")
     public Concert createConcert(@Valid @RequestBody Concert concert) {
         return concertService.save(concert);
     }
 
-    @PutMapping("/concerts/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Concert> updateConcert(@Valid @PathVariable Long id, @RequestBody Concert concertDetails) {
         Concert updatedConcert = concertService.update(id, concertDetails);
         return ResponseEntity.ok(updatedConcert);
     }
 
-    @DeleteMapping("/concerts/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Map<String, Boolean>> deleteConcert(@PathVariable Long id) {
         Concert concert = concertService.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Concert not found with id: " + id));
