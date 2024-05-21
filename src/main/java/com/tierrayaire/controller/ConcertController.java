@@ -8,8 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +26,7 @@ public class ConcertController {
         this.concertService = concertService;
     }
 
-    @GetMapping("/")
+    @GetMapping
     public List<Concert> getAllConcerts() {
         return concertService.findAll();
     }
@@ -40,7 +38,7 @@ public class ConcertController {
         return ResponseEntity.ok(concert);
     }
 
-    @PostMapping("/")
+    @PostMapping
     public Concert createConcert(@Valid @RequestBody Concert concert) {
         return concertService.save(concert);
     }
