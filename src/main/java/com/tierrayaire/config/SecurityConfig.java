@@ -10,36 +10,58 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+
+import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-
 public class SecurityConfig {
 
     @Autowired
     private UserDetailsServiceImpl userDetailsServiceImpl;
 
     @Bean
-    public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .authorizeRequests()
-                .requestMatchers(HttpMethod.POST, "/api/concerts/**").authenticated()
-                .requestMatchers(HttpMethod.PUT, "/api/concerts/**").authenticated()
-                .requestMatchers(HttpMethod.GET, "/api/concerts/**").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/concerts/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/users/**").authenticated()
-                .anyRequest().authenticated()
-                .and().formLogin()
-                .and().httpBasic();
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/concerts/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/v1/concerts/**").authenticated()
+                        .requestMatchers(HttpMethod.PUT, "/api/v1/concerts/**").authenticated()
+                        .requestMatchers(HttpMethod.DELETE, "/api/v1/concerts/**").authenticated()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(withDefaults())
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                );
+
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -49,9 +71,10 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        return http.getSharedObject(AuthenticationManagerBuilder.class)
+        AuthenticationManagerBuilder authManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+        authManagerBuilder
                 .userDetailsService(userDetailsServiceImpl)
-                .passwordEncoder(passwordEncoder())
-                .and().build();
+                .passwordEncoder(passwordEncoder());
+        return authManagerBuilder.build();
     }
 }
