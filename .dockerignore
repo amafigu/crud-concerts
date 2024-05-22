@@ -1,0 +1,35 @@
+# Ignore the Maven target directory except for the JAR file
+target/
+!target/*.jar
+
+# General IDE and tool-specific files
+**/.idea
+**/*.iml
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.vscode
+
+# IntelliJ IDEA specific files
+.idea/shelf
+.idea/workspace.xml
+
+# Eclipse specific files
+**/.apt_generated
+**/.classpath
+**/.factorypath
+**/.project
+**/.settings
+**/.springBeans
+**/.sts4-cache
+
+# NetBeans specific files
+nbproject/private
+nbbuild
+dist
+nbdist
+.nb-gradle
+
+# Fly.io specific files
+fly.toml
